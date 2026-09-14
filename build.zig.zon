@@ -4,8 +4,8 @@
     .version = "0.1.0",
     .dependencies = .{
         .AFLplusplus = .{
-            .url = "git+https://github.com/allyourcodebase/AFLplusplus#7e65eb4262688a120bf830d145060aac0e5db920",
-            .hash = "AFLplusplus-4.21.0-aA1y4dZxAAAhqDy_JoRw3zwNSg8MenEGP7uJI_xNcYuV",
+            .url = "git+https://github.com/allyourcodebase/AFLplusplus#58f959a6b788f1364643f64344fd37eed78afee0",
+            .hash = "AFLplusplus-4.21.0-aA1y4ZlxAAAHcA1GykLz0bBAGR5RbAZqUvr3SJ38JaZX",
             .lazy = true,
         },
     },
