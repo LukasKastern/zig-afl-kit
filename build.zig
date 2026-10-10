@@ -114,12 +114,15 @@ fn linkDependencies(b: *std.Build, run_afl_cc: anytype, obj: *std.Build.Step.Com
     try to_process.appendSlice(b.allocator, obj.root_module.link_objects.items);
 
     var libraries_to_link: std.ArrayList(*std.Build.Step.Compile) = .empty;
+    var system_dependencies: std.ArrayList([]const u8) = .empty;
 
     for (all_modules.items) |mod| {
         try to_process.appendSlice(b.allocator, mod.link_objects.items);
         while (to_process.pop()) |next| {
             switch (next) {
-                .system_lib => {},
+                .system_lib => |lib| {
+                    try system_dependencies.append(b.allocator, lib.name);
+                },
                 .other_step => |step| {
                     if (step.kind == .lib) {
                         const unique = blk: {
@@ -146,6 +149,10 @@ fn linkDependencies(b: *std.Build, run_afl_cc: anytype, obj: *std.Build.Step.Com
         run_afl_cc.step.dependOn(&to_link.step);
         run_afl_cc.addPrefixedDirectoryArg("-L", to_link.getEmittedBin().dirname());
         run_afl_cc.addArg(try std.fmt.allocPrint(b.allocator, "-l{s}", .{to_link.name}));
+    }
+
+    for (system_dependencies.items) |sys| {
+        run_afl_cc.addArg(try std.fmt.allocPrint(b.allocator, "-l{s}", .{sys}));
     }
 }
 
